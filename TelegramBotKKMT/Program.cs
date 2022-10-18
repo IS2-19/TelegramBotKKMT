@@ -6,7 +6,8 @@ namespace TelegramBotKKMT;
 
 internal class Program
 {
-    private static ITelegramBotClient bot = new TelegramBotClient("5788996324:AAG9T9WxU6BLCjjE9Ozyi3K43Pd57Yx2Nk4");
+    private const string token = "5788996324:AAG9T9WxU6BLCjjE9Ozyi3K43Pd57Yx2Nk4";
+    private static readonly ITelegramBotClient client = new TelegramBotClient(token);
     static void Main(string[] args)
     {
         Console.WriteLine("> Start");
@@ -16,7 +17,7 @@ internal class Program
         {
             AllowedUpdates = { }, // receive all update types
         };
-        bot.StartReceiving(
+        client.StartReceiving(
                 HandleUpdateAsync,
                 HandleErrorAsync,
                 receiverOptions,
@@ -29,10 +30,19 @@ internal class Program
     public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         // Некоторые действия
-        Console.WriteLine("> New Message");
-        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
-        if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
+        
+        //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+        if (update.Type is Telegram.Bot.Types.Enums.UpdateType.Message)
         {
+            if (update.Message?.Text is not null)
+            {
+                Console.WriteLine($"> New Message: \"{update.Message.Text}\"");
+            }
+            
+        }
+        /*if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
+        {
+            
             var message = update.Message;
             if (message.Text.ToLower() == "ff")
             {
@@ -40,7 +50,7 @@ internal class Program
                 return;
             }
             await botClient.SendTextMessageAsync(message.Chat, "Стандартный ответ, комманда не распознана.");
-        }
+        }*/
     }
 
     public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
