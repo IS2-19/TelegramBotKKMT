@@ -34,11 +34,15 @@ internal class Program
         if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
         {
             var message = update.Message;
-            if (message.Text.ToLower() == "ff")
+            if (update.Message as Message is not null)
             {
-                await botClient.SendTextMessageAsync(message.Chat, "Добро пожаловать на борт, добрый путник!");
-                return;
+                if (update.Message.Text?.ToLower() == "ff")
+                {
+                    await botClient.SendTextMessageAsync(message.Chat, "Добро пожаловать на борт, добрый путник!");
+                    return;
+                }
             }
+            
             await botClient.SendTextMessageAsync(message.Chat, "Стандартный ответ, комманда не распознана.");
         }
     }
